@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="1" author="niyi">
+        <createTable tableName="projects">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="TEXT"/>
+            <column name="start_date" type="DATE"/>
+            <column name="end_date" type="DATE"/>
+            <column name="status" type="VARCHAR(50)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2" author="niyi">
+        <createTable tableName="team_members">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(255)">
+                <constraints unique="true"/>
+            </column>
+            <column name="role" type="VARCHAR(100)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="3" author="niyi">
+        <createTable tableName="tasks">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="project_id" type="INT">
+                <constraints nullable="false" foreignKeyName="fk_task_project" references="projects(id)"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="TEXT"/>
+            <column name="start_date" type="DATE"/>
+            <column name="end_date" type="DATE"/>
+            <column name="status" type="VARCHAR(50)"/>
+            <column name="assigned_to" type="INT">
+                <constraints foreignKeyName="fk_task_member" references="team_members(id)"/>
+            </column>
+            <column name="priority" type="VARCHAR(20)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="4" author="niyi">
+        <createTable tableName="comments">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="task_id" type="INT">
+                <constraints nullable="false" foreignKeyName="fk_comment_task" references="tasks(id)"/>
+            </column>
+            <column name="member_id" type="INT">
+                <constraints nullable="false" foreignKeyName="fk_comment_member" references="team_members(id)"/>
+            </column>
+            <column name="comment_text" type="TEXT"/>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
